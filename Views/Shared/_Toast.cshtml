@@ -1,0 +1,57 @@
+@* Toast Container — DESIGN.md §Notifications & Feedback *@
+<div id="toastWrap" class="toast-container-custom" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+    /**
+     * showToast(message, type, duration)
+     * @@param {string} message  - Toast text
+     * @@param {string} type     - 'success' | 'warning' | 'error' | 'info' | 'primary'
+     * @@param {number} duration - Auto-dismiss in ms (default 3000)
+     */
+    function showToast(message, type, duration) {
+        type = type || 'primary';
+        duration = duration || 3000;
+
+        var colorMap = {
+            success: '#4CAF50',
+            warning: '#FF9800',
+            error: '#F44336',
+            info: '#2196F3',
+            primary: '#169CFD'
+        };
+        var iconMap = {
+            success: 'check-circle-fill',
+            warning: 'exclamation-triangle-fill',
+            error: 'x-circle-fill',
+            info: 'info-circle-fill',
+            primary: 'bell-fill'
+        };
+
+        var bg = colorMap[type] || colorMap.primary;
+        var icon = iconMap[type] || iconMap.primary;
+        var id = 'toast-' + Date.now();
+
+        // Prevent duplicates
+        var existing = document.querySelectorAll('.toast-pill');
+        for (var i = 0; i < existing.length; i++) {
+            if (existing[i].textContent.trim() === message.trim()) return;
+        }
+
+        var html = '<div id="' + id + '" class="toast-pill toast-in" style="background:' + bg + '">'
+            + '<i class="bi bi-' + icon + '"></i>'
+            + '<span>' + message + '</span>'
+            + '</div>';
+
+        var wrap = document.getElementById('toastWrap');
+        wrap.insertAdjacentHTML('beforeend', html);
+
+        setTimeout(function () {
+            var el = document.getElementById(id);
+            if (el) {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                setTimeout(function () { el.remove(); }, 300);
+            }
+        }, duration);
+    }
+</script>

@@ -1,0 +1,11 @@
+@* Alert Modal — DESIGN.md §Notifications / Controller Integration *@
+@if (TempData["alertMessage"] != null && ViewData["disabledAlert"] == null)
+{
+    var alertMsg = TempData["alertMessage"]?.ToString() ?? "";
+    var alertStatus = (TempData["alertStatus"]?.ToString() ?? "info").ToLower();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast("@Html.Raw(alertMsg.Replace("\"", "\\\""))", "@alertStatus");
+        });
+    </script>
+}

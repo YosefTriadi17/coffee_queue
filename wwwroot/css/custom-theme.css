@@ -1,0 +1,507 @@
+/* ===================================================================
+   CoffeeQueue — Custom Theme (DESIGN.md v1.0)
+   Primary customization layer on top of Bootstrap 5.3.8
+   =================================================================== */
+
+/* -----------------------------------------------
+   1. CSS Custom Properties (Color System)
+   ----------------------------------------------- */
+:root {
+    /* Primary Colors */
+    --bs-primary: #0658A3;
+    --bs-primary-rgb: 6, 88, 163;
+    --bs-secondary: #64748B;
+    --bs-secondary-rgb: 100, 116, 139;
+
+    /* Semantic Colors */
+    --bs-success: #10B981;
+    --bs-success-rgb: 16, 185, 129;
+    --bs-danger: #EF4444;
+    --bs-danger-rgb: 239, 68, 68;
+    --bs-warning: #F7C91C;
+    --bs-warning-rgb: 247, 201, 28;
+    --bs-info: #3167eb;
+    --bs-info-rgb: 49, 103, 235;
+    --bs-light: #f8f9fa;
+    --bs-light-rgb: 248, 249, 250;
+    --bs-dark: #212529;
+    --bs-dark-rgb: 33, 37, 41;
+
+    /* Hover States */
+    --primary-hover: #054a8a;
+    --success-hover: #0da271;
+    --danger-hover: #e03131;
+    --warning-hover: #e6b800;
+    --secondary-hover: #56657a;
+    --info-hover: #2a5bd5;
+
+    /* Text Colors */
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #64748B;
+    --text-link: #0366d6;
+
+    /* Ready / Cyan accent */
+    --ready-color: #0dcaf0;
+
+    /* Spacing */
+    --navbar-height: 56px;
+}
+
+/* -----------------------------------------------
+   2. Base / Typography
+   ----------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 14px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    font-family: "Roboto", sans-serif, system-ui, -apple-system;
+    background-color: var(--bs-light);
+    color: var(--text-primary);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: var(--text-link);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--bs-primary);
+}
+
+/* -----------------------------------------------
+   3. Layout & Container
+   ----------------------------------------------- */
+.container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 15px;
+}
+
+.width-phone {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* -----------------------------------------------
+   4. Navbar
+   ----------------------------------------------- */
+.navbar-brand {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff !important;
+    letter-spacing: 0.3px;
+}
+
+.navbar-brand:hover {
+    color: #fff !important;
+}
+
+.navbar .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: color 0.2s ease;
+}
+
+.navbar .nav-link:hover {
+    color: #fff !important;
+}
+
+.bg-primary,
+.navbar.bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+/* Navbar auto-hide on scroll */
+.navbar-autohide {
+    transition: transform 0.3s ease;
+}
+
+.navbar-autohide.navbar-hidden {
+    transform: translateY(-100%);
+}
+
+/* -----------------------------------------------
+   5. Buttons
+   ----------------------------------------------- */
+.btn {
+    transition: all 0.2s ease;
+    font-weight: 500;
+    border-radius: 0.375rem;
+}
+
+/* Button animation class */
+.button-animation,
+.btn-anim {
+    transition: all 0.2s ease;
+}
+
+.button-animation:hover:not(:active),
+.btn-anim:hover:not(:active) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button-animation:active,
+.btn-anim:active {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Primary */
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: #fff;
+}
+
+/* Success */
+.btn-success {
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
+    color: #fff;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    background-color: var(--success-hover);
+    border-color: var(--success-hover);
+    color: #fff;
+}
+
+/* Danger */
+.btn-danger {
+    background-color: var(--bs-danger);
+    border-color: var(--bs-danger);
+    color: #fff;
+}
+
+.btn-danger:hover,
+.btn-danger:focus {
+    background-color: var(--danger-hover);
+    border-color: var(--danger-hover);
+    color: #fff;
+}
+
+/* Warning */
+.btn-warning {
+    background-color: var(--bs-warning);
+    border-color: var(--bs-warning);
+    color: #000;
+}
+
+.btn-warning:hover,
+.btn-warning:focus {
+    background-color: var(--warning-hover);
+    border-color: var(--warning-hover);
+    color: #000;
+}
+
+/* Secondary */
+.btn-secondary {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+    color: #fff;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background-color: var(--secondary-hover);
+    border-color: var(--secondary-hover);
+    color: #fff;
+}
+
+/* Info */
+.btn-info {
+    background-color: var(--bs-info);
+    border-color: var(--bs-info);
+    color: #fff;
+}
+
+.btn-info:hover,
+.btn-info:focus {
+    background-color: var(--info-hover);
+    border-color: var(--info-hover);
+    color: #fff;
+}
+
+/* Outline variants */
+.btn-outline-primary {
+    color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: #fff;
+}
+
+.btn-outline-success {
+    color: var(--bs-success);
+    border-color: var(--bs-success);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
+    color: #fff;
+}
+
+.btn-outline-danger {
+    color: var(--bs-danger);
+    border-color: var(--bs-danger);
+}
+
+.btn-outline-danger:hover {
+    background-color: var(--bs-danger);
+    border-color: var(--bs-danger);
+    color: #fff;
+}
+
+/* -----------------------------------------------
+   6. Cards & Containers
+   ----------------------------------------------- */
+.card {
+    background: #fff;
+    border: none;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 1rem 1.5rem;
+}
+
+/* -----------------------------------------------
+   7. Form Elements
+   ----------------------------------------------- */
+.form-control:focus,
+.form-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(6, 88, 163, 0.15);
+    border-color: var(--bs-primary);
+}
+
+.is-valid {
+    border-color: #10B981 !important;
+}
+
+.is-invalid {
+    border-color: #EF4444 !important;
+}
+
+.valid-feedback {
+    color: #10B981;
+}
+
+.invalid-feedback {
+    color: #EF4444;
+}
+
+/* -----------------------------------------------
+   8. Alerts
+   ----------------------------------------------- */
+.alert-primary {
+    background-color: #d1e3f5;
+    color: #0658A3;
+    border-color: #b8d4ef;
+}
+
+.alert-success {
+    background-color: #d1f0e3;
+    color: #10B981;
+    border-color: #b3e8d2;
+}
+
+.alert-danger {
+    background-color: #fdd9d9;
+    color: #EF4444;
+    border-color: #fcc;
+}
+
+.alert-warning {
+    background-color: #fdf3d4;
+    color: #E6B800;
+    border-color: #fcedb3;
+}
+
+.alert-info {
+    background-color: #d6e3fb;
+    color: #3167eb;
+    border-color: #bdd2f7;
+}
+
+/* -----------------------------------------------
+   9. Badges
+   ----------------------------------------------- */
+.badge.bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+.badge.bg-success {
+    background-color: var(--bs-success) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--bs-danger) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--bs-warning) !important;
+    color: #000;
+}
+
+.badge.bg-info {
+    background-color: var(--bs-info) !important;
+}
+
+/* -----------------------------------------------
+   10. Progress Bars
+   ----------------------------------------------- */
+.progress-bar {
+    background-color: #0658A3 !important;
+}
+
+/* -----------------------------------------------
+   11. Animations
+   ----------------------------------------------- */
+
+/* Pulse glow for available items */
+@keyframes pulseGlow {
+    0%,
+    100% {
+        box-shadow: 0 0 12px rgba(6, 88, 163, 0.25);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(6, 88, 163, 0.45);
+    }
+}
+
+.avail-glow {
+    animation: pulseGlow 2s infinite;
+}
+
+/* Loading spinner */
+@keyframes spinRing {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinRingReverse {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+/* Toast slide-in */
+@keyframes slideInUp {
+    from {
+        transform: translateY(80px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.toast-in {
+    animation: slideInUp 0.3s ease;
+}
+
+/* Fade-in for page content */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease both;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .avail-glow {
+        animation: none;
+    }
+}
+
+/* -----------------------------------------------
+   12. Scrollbar Styling
+   ----------------------------------------------- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.5);
+}

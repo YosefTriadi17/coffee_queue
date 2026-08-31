@@ -1,0 +1,519 @@
+/* ===================================================================
+   CoffeeQueue — Site Styles
+   App-specific component and page styles
+   =================================================================== */
+
+/* -----------------------------------------------
+   Queue Grid Cards
+   ----------------------------------------------- */
+.coffee-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.coffee-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.coffee-card.is-available {
+    animation: pulseGlow 2s infinite;
+}
+
+.coffee-card.is-available:hover {
+    transform: translateY(-2px);
+}
+
+.coffee-card.is-unavailable {
+    opacity: 0.6;
+}
+
+.coffee-card.is-unavailable .coffee-emoji {
+    filter: grayscale(1);
+}
+
+/* Card inner elements */
+.coffee-emoji {
+    font-size: 32px;
+    line-height: 1;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.coffee-number {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.coffee-number.is-available {
+    font-size: 22px;
+    color: var(--bs-primary);
+}
+
+.coffee-number.is-unavailable {
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+.coffee-type {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* -----------------------------------------------
+   Status Badges
+   ----------------------------------------------- */
+.status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+}
+
+.status-badge.status-available {
+    background-color: var(--bs-success);
+    color: #fff;
+}
+
+.status-badge.status-reserved {
+    background-color: var(--bs-warning);
+    color: #000;
+}
+
+.status-badge.status-preparing {
+    background-color: var(--bs-info);
+    color: #fff;
+}
+
+.status-badge.status-ready {
+    background-color: var(--ready-color);
+    color: #fff;
+}
+
+/* Badge position inside card */
+.coffee-card .badge-wrap {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+/* -----------------------------------------------
+   Counter Pills (Hero)
+   ----------------------------------------------- */
+.counter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.counter-pill .counter-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.counter-pill.pill-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--bs-success);
+}
+
+.counter-pill.pill-success .counter-dot {
+    background-color: var(--bs-success);
+}
+
+.counter-pill.pill-warning {
+    background-color: rgba(247, 201, 28, 0.1);
+    color: var(--bs-warning);
+}
+
+.counter-pill.pill-warning .counter-dot {
+    background-color: var(--bs-warning);
+}
+
+.counter-pill.pill-info {
+    background-color: rgba(49, 103, 235, 0.1);
+    color: var(--bs-info);
+}
+
+.counter-pill.pill-info .counter-dot {
+    background-color: var(--bs-info);
+}
+
+/* -----------------------------------------------
+   Filter Buttons
+   ----------------------------------------------- */
+.filter-bar {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 1.25rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.filter-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #dee2e6;
+    background: #fff;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: rgba(6, 88, 163, 0.3);
+}
+
+.filter-btn.active {
+    background-color: var(--bs-primary);
+    color: #fff;
+    border-color: var(--bs-primary);
+}
+
+/* -----------------------------------------------
+   Queue Grid Layout
+   ----------------------------------------------- */
+.queue-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+@media (min-width: 576px) {
+    .queue-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .queue-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .queue-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* -----------------------------------------------
+   Reserve Button inside Card
+   ----------------------------------------------- */
+.btn-reserve-card {
+    margin-top: 0.75rem;
+    width: 100%;
+    background-color: var(--bs-primary);
+    color: #fff;
+    border: none;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-reserve-card:hover {
+    background-color: var(--primary-hover);
+}
+
+/* -----------------------------------------------
+   Ready Sidebar
+   ----------------------------------------------- */
+.ready-sidebar {
+    position: sticky;
+    top: calc(var(--navbar-height) + 24px);
+}
+
+.ready-card {
+    background: #fff;
+    border-radius: 0.375rem;
+    border: 1px solid rgba(13, 202, 240, 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ready-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ready-card .ready-emoji {
+    font-size: 40px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.ready-card:hover .ready-emoji {
+    transform: scale(1.1);
+}
+
+.ready-card .ready-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--bs-primary);
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.ready-card .ready-type {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.ready-pickup-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f3f5;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ready-pickup-btn:hover {
+    background: var(--text-secondary);
+    color: #fff;
+}
+
+.ready-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #adb5bd;
+    background: #f8f9fa;
+    border-radius: 0.375rem;
+    border: 1px dashed #dee2e6;
+}
+
+.ready-empty i {
+    font-size: 1.75rem;
+    opacity: 0.5;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.ready-empty p {
+    font-size: 14px;
+    margin: 0;
+}
+
+/* -----------------------------------------------
+   Detail Panel
+   ----------------------------------------------- */
+.detail-panel {
+    background: #fff;
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 1.25rem;
+}
+
+.detail-emoji {
+    font-size: 48px;
+    line-height: 1;
+}
+
+.detail-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--bs-primary);
+}
+
+.detail-type {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.detail-status {
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    display: inline-block;
+}
+
+/* -----------------------------------------------
+   Letter Jump Buttons
+   ----------------------------------------------- */
+.letter-jump-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--bs-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.letter-jump-btn:hover {
+    background: var(--bs-primary);
+    color: #fff;
+    border-color: var(--bs-primary);
+}
+
+/* -----------------------------------------------
+   Toast Container
+   ----------------------------------------------- */
+.toast-container-custom {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1055;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    pointer-events: none;
+}
+
+.toast-pill {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    max-width: 85vw;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* -----------------------------------------------
+   Global Loading Overlay
+   ----------------------------------------------- */
+.global-loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.global-loading-overlay.show {
+    display: flex;
+}
+
+.loading-spinner {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.loading-spinner .ring {
+    position: absolute;
+    inset: 0;
+    border: 4px solid transparent;
+    border-radius: 50%;
+}
+
+.loading-spinner .ring-outer {
+    border-top-color: var(--bs-primary);
+    animation: spinRing 1s linear infinite;
+}
+
+.loading-spinner .ring-inner {
+    inset: 6px;
+    border-bottom-color: var(--bs-primary);
+    opacity: 0.5;
+    animation: spinRingReverse 0.8s linear infinite;
+}
+
+.loading-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 0.75rem;
+}
+
+/* -----------------------------------------------
+   Sticky Footer Spacer
+   ----------------------------------------------- */
+.footer-spacer {
+    height: 60px;
+}
+
+/* -----------------------------------------------
+   Utility: ring highlight for jumpTo
+   ----------------------------------------------- */
+.ring-highlight {
+    box-shadow: 0 0 0 3px var(--bs-primary), 0 0 12px rgba(6, 88, 163, 0.3) !important;
+    transition: box-shadow 0.3s ease;
+}
+
+/* -----------------------------------------------
+   Responsive: Ready sidebar on mobile
+   ----------------------------------------------- */
+@media (max-width: 991.98px) {
+    .ready-sidebar-col {
+        border-top: 1px solid #dee2e6;
+        padding-top: 1.5rem;
+        margin-top: 1rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .ready-sidebar-col {
+        border-left: 1px solid #dee2e6;
+        padding-left: 2rem;
+    }
+}
+
+/* Ready list scroll */
+.ready-list {
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    padding-bottom: 1rem;
+}

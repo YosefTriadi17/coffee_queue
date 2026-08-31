@@ -1,0 +1,298 @@
+@model IReadOnlyList<CoffeeQueue.Services.QueueItem>
+@{
+    ViewData["Title"] = "Queue";
+    var counts = new Dictionary<string, int>
+    {
+        ["available"] = Model.Count(x => x.Status == "available"),
+        ["reserved"] = Model.Count(x => x.Status == "reserved"),
+        ["preparing"] = Model.Count(x => x.Status == "preparing"),
+        ["ready"] = Model.Count(x => x.Status == "ready"),
+    };
+}
+
+<div class="container-fluid py-4" style="max-width:1320px;">
+    <div class="row g-4">
+
+        @* ===== Left Side: Queue & Filters ===== *@
+        <div class="col-12 col-lg-8 col-xl-9">
+
+            @* Hero Header *@
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4 fade-in">
+                <div>
+                    <h1 class="fw-bold mb-1" style="font-size:28px; color:var(--bs-primary);">Coffee Queue</h1>
+                    <p class="mb-0" style="font-size:14px; color:var(--text-muted);">Tap a number to reserve • A01-A20</p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="counter-pill pill-success">
+                        <span class="counter-dot"></span>Available: @counts["available"]
+                    </span>
+                    <span class="counter-pill pill-warning">
+                        <span class="counter-dot"></span>Reserved: @counts["reserved"]
+                    </span>
+                    <span class="counter-pill pill-info">
+                        <span class="counter-dot"></span>Preparing: @counts["preparing"]
+                    </span>
+                </div>
+            </div>
+
+            @* Filter Buttons *@
+            <div class="filter-bar fade-in">
+                @{
+                    var filters = new[] { ("all", "All"), ("available", "Available"), ("reserved", "Reserved"), ("preparing", "Preparing") };
+                }
+                @foreach (var (key, label) in filters)
+                {
+                    <button data-filter="@key"
+                            onclick="filterItems('@key')"
+                            class="filter-btn @(key == "all" ? "active" : "")"
+                            id="filterBtn-@key">
+                        @label
+                    </button>
+                }
+            </div>
+
+            @* Queue Grid A01-A20 *@
+            <div class="queue-grid fade-in" id="coffeeGrid">
+                @foreach (var item in Model.Where(x => x.Status != "ready"))
+                {
+                    var isAvail = item.Status == "available";
+                    <div class="coffee-item" data-status="@item.Status" data-number="@item.Number" data-letter="@item.Number[0]">
+                        <div class="coffee-card @(isAvail ? "is-available" : "is-unavailable")"
+                             onclick="selectOrder('@item.Number','@item.CoffeeType','@item.Status','@item.CoffeeEmoji')"
+                             role="button"
+                             tabindex="0"
+                             aria-label="@item.Number - @item.CoffeeType (@item.Status)">
+
+                            @* Status badge *@
+                            <div class="badge-wrap">
+                                @if (item.Status == "available")
+                                {
+                                    <span class="status-badge status-available">Available</span>
+                                }
+                                else if (item.Status == "reserved")
+                                {
+                                    <span class="status-badge status-reserved">Reserved</span>
+                                }
+                                else if (item.Status == "preparing")
+                                {
+                                    <span class="status-badge status-preparing">Preparing</span>
+                                }
+                            </div>
+
+                            <div class="coffee-emoji">@item.CoffeeEmoji</div>
+                            <div class="coffee-number @(isAvail ? "is-available" : "is-unavailable")">@item.Number</div>
+                            <div class="coffee-type">@item.CoffeeType</div>
+
+                            @if (isAvail)
+                            {
+                                <button class="btn-reserve-card btn-anim"
+                                        onclick="event.stopPropagation(); reserveOrder('@item.Number')"
+                                        aria-label="Reserve @item.Number">
+                                    Reserve
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* Letter Jump *@
+            <div class="d-flex justify-content-center gap-2 mt-4 fade-in">
+                <button onclick="jumpTo('A')" class="letter-jump-btn" aria-label="Jump to letter A">A</button>
+            </div>
+        </div>
+
+        @* ===== Right Side: Ready for Pickup ===== *@
+        <div class="col-12 col-lg-4 col-xl-3 ready-sidebar-col">
+            <div class="ready-sidebar">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h2 class="h5 fw-bold mb-0 d-flex align-items-center gap-2" style="color:var(--ready-color);">
+                        <i class="bi bi-check2-circle"></i> Ready for Pickup
+                    </h2>
+                    <span class="counter-pill" style="background:rgba(13,202,240,0.1); color:var(--ready-color);">
+                        @counts["ready"] Orders
+                    </span>
+                </div>
+
+                <div class="ready-list d-flex flex-column gap-3">
+                    @if (counts["ready"] == 0)
+                    {
+                        <div class="ready-empty">
+                            <i class="bi bi-cup"></i>
+                            <p>No orders ready yet</p>
+                        </div>
+                    }
+                    @foreach (var item in Model.Where(x => x.Status == "ready"))
+                    {
+                        <div class="ready-card"
+                             onclick="selectOrder('@item.Number','@item.CoffeeType','@item.Status','@item.CoffeeEmoji')"
+                             role="button"
+                             tabindex="0"
+                             aria-label="@item.Number ready for pickup">
+                            <div class="ready-emoji">@item.CoffeeEmoji</div>
+                            <div class="flex-grow-1">
+                                <div class="ready-number">@item.Number</div>
+                                <div class="ready-type">@item.CoffeeType</div>
+                            </div>
+                            <button class="ready-pickup-btn"
+                                    onclick="event.stopPropagation(); changeStatus('@item.Number','available')"
+                                    title="Mark as Picked Up"
+                                    aria-label="Mark @item.Number as picked up">
+                                <i class="bi bi-check-lg" style="font-size:1.15rem;"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @* ===== Detail Panel ===== *@
+    <div id="detailPanel" class="d-none mt-4 detail-panel mx-auto" style="max-width:720px;">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex gap-3 align-items-center">
+                <div id="dEmoji" class="detail-emoji"></div>
+                <div>
+                    <div id="dNumber" class="detail-number"></div>
+                    <div id="dType" class="detail-type"></div>
+                    <div id="dStatus" class="detail-status"></div>
+                </div>
+            </div>
+            <button onclick="hideDetail()" class="btn btn-sm btn-light" aria-label="Close detail panel">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <button id="btnReserve" class="btn btn-primary btn-anim flex-fill" style="min-width:120px;">Reserve this</button>
+            <button id="btnPreparing" class="btn btn-info btn-anim flex-fill d-none" style="min-width:120px;">Start brewing</button>
+            <button id="btnReady" class="btn btn-anim flex-fill d-none" style="min-width:120px; background:var(--ready-color); color:#fff;">Mark ready</button>
+            <button id="btnPicked" class="btn btn-secondary btn-anim flex-fill d-none" style="min-width:120px;">Picked up</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // ===== Status metadata =====
+    var statusMeta = {
+        available: { label: 'Available', bg: 'rgba(16,185,129,0.1)', color: 'var(--bs-success)' },
+        reserved: { label: 'Reserved', bg: 'rgba(247,201,28,0.1)', color: 'var(--bs-warning)' },
+        preparing: { label: 'Preparing', bg: 'rgba(49,103,235,0.1)', color: 'var(--bs-info)' },
+        ready: { label: 'Ready', bg: 'rgba(13,202,240,0.1)', color: 'var(--ready-color)' }
+    };
+
+    var cur = null;
+
+    // ===== Filter =====
+    function filterItems(f) {
+        document.querySelectorAll('.filter-btn').forEach(function (b) {
+            var isActive = b.dataset.filter === f;
+            b.classList.toggle('active', isActive);
+        });
+        document.querySelectorAll('.coffee-item').forEach(function (el) {
+            el.style.display = (f === 'all' || el.dataset.status === f) ? '' : 'none';
+        });
+    }
+
+    // ===== Jump to letter =====
+    function jumpTo(letter) {
+        var first = document.querySelector('[data-letter="' + letter + '"]');
+        if (first) {
+            first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            first.firstElementChild.classList.add('ring-highlight');
+            setTimeout(function () {
+                first.firstElementChild.classList.remove('ring-highlight');
+            }, 1200);
+        }
+    }
+
+    // ===== Select order detail =====
+    function selectOrder(num, type, status, emoji) {
+        cur = num;
+        var p = document.getElementById('detailPanel');
+        document.getElementById('dEmoji').textContent = emoji;
+        document.getElementById('dNumber').textContent = num;
+        document.getElementById('dType').textContent = type;
+
+        var meta = statusMeta[status] || statusMeta.available;
+        var sEl = document.getElementById('dStatus');
+        sEl.textContent = meta.label;
+        sEl.style.background = meta.bg;
+        sEl.style.color = meta.color;
+
+        var bR = document.getElementById('btnReserve');
+        var bP = document.getElementById('btnPreparing');
+        var bRe = document.getElementById('btnReady');
+        var bPi = document.getElementById('btnPicked');
+
+        [bR, bP, bRe, bPi].forEach(function (b) { b.classList.add('d-none'); });
+
+        if (status === 'available') bR.classList.remove('d-none');
+        else if (status === 'reserved') bP.classList.remove('d-none');
+        else if (status === 'preparing') bRe.classList.remove('d-none');
+        else if (status === 'ready') bPi.classList.remove('d-none');
+
+        bR.onclick = function () { reserveOrder(num); };
+        bP.onclick = function () { changeStatus(num, 'preparing'); };
+        bRe.onclick = function () { changeStatus(num, 'ready'); };
+        bPi.onclick = function () { changeStatus(num, 'available'); };
+
+        p.classList.remove('d-none');
+        p.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ===== Hide detail =====
+    function hideDetail() {
+        document.getElementById('detailPanel').classList.add('d-none');
+    }
+
+    // ===== Reserve order =====
+    async function reserveOrder(num) {
+        showGlobalLoading();
+        try {
+            var r = await fetch('/api/reserve/' + num, { method: 'POST' });
+            var j = await r.json();
+            if (r.ok) {
+                showToast(j.message, 'success');
+                setTimeout(function () { location.reload(); }, 1100);
+            } else {
+                showToast(j.message, 'error');
+            }
+        } catch (e) {
+            showToast('Network error', 'error');
+        } finally {
+            hideGlobalLoading();
+        }
+    }
+
+    // ===== Change status =====
+    async function changeStatus(num, st) {
+        showGlobalLoading();
+        try {
+            var r = await fetch('/api/status/' + num + '/' + st, { method: 'POST' });
+            var j = await r.json();
+            showToast(j.message, 'success');
+            setTimeout(function () { location.reload(); }, 800);
+        } catch (e) {
+            showToast('Failed', 'error');
+        } finally {
+            hideGlobalLoading();
+        }
+    }
+
+    // ===== Keyboard support for cards =====
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            var card = e.target.closest('.coffee-card, .ready-card');
+            if (card) {
+                e.preventDefault();
+                card.click();
+            }
+        }
+        if (e.key === 'Escape') {
+            hideDetail();
+        }
+    });
+</script>
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="CoffeeQueue — Reserve your coffee order in the queue." />
+    <title>@ViewData["Title"] - Coffee Queue</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+
+    @* Preload critical resources *@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    @* Google Fonts — Roboto *@
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    @* Bootstrap 5.3.8 CSS *@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+    @* Bootstrap Icons 1.11.3 *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    @* Font Awesome 6.4.2 *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    @* Custom Theme + Site Styles *@
+    <link rel="stylesheet" href="~/css/custom-theme.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @* ===== Navbar (DESIGN.md §Navigation Bar) ===== *@
+    <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm navbar-autohide"
+         role="navigation" aria-label="Main navigation">
+        <div class="container-fluid" style="max-width:1320px;">
+            @if (ViewBag.ShowNavbarButton == true)
+            {
+                <a href="javascript:history.back()" class="text-white me-2" style="font-size:1.3rem;" aria-label="Go back">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            }
+            <a class="navbar-brand" href="/">☕ Coffee Queue</a>
+            <a href="/" class="nav-link ms-auto" aria-label="Home">
+                <i class="bi bi-house-door" style="font-size:1.25rem;"></i>
+            </a>
+        </div>
+    </nav>
+
+    @* ===== Global Loading (DESIGN.md §Loading States) ===== *@
+    @await Html.PartialAsync("_GlobalLoading")
+
+    @* ===== Toast (DESIGN.md §Notifications) ===== *@
+    @await Html.PartialAsync("_Toast")
+
+    @* ===== Alert from TempData ===== *@
+    @await Html.PartialAsync("_AlertModal")
+
+    @* ===== Main Content ===== *@
+    <div style="padding-top: var(--navbar-height);">
+        @RenderBody()
+    </div>
+
+    <div class="footer-spacer"></div>
+
+    @* ===== Scripts ===== *@
+    @* jQuery 3.7.1 *@
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+
+    @* Bootstrap 5.3.8 JS Bundle *@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+
+    <script>
+        // ===== Global Loading helpers (DESIGN.md) =====
+        function showGlobalLoading(msg) {
+            var el = document.getElementById('globalLoading');
+            if (msg) document.getElementById('loadingMessage').textContent = msg;
+            el.classList.add('show');
+            el.setAttribute('aria-hidden', 'false');
+        }
+        function hideGlobalLoading() {
+            var el = document.getElementById('globalLoading');
+            el.classList.remove('show');
+            el.setAttribute('aria-hidden', 'true');
+        }
+
+        // Auto-hide loading on page load
+        window.addEventListener('load', function () { hideGlobalLoading(); });
+
+        // ===== Auto-trigger loading (DESIGN.md §Smart Behaviors) =====
+        document.addEventListener('click', function (e) {
+            var link = e.target.closest('a[href]');
+            if (!link) return;
+            var href = link.getAttribute('href') || '';
+            // Skip: external, download, blank, anchor, javascript
+            if (link.target === '_blank') return;
+            if (link.hasAttribute('download')) return;
+            if (href.startsWith('#') || href.startsWith('javascript:')) return;
+            if (href.startsWith('http') && !href.startsWith(location.origin)) return;
+            setTimeout(function () { showGlobalLoading(); }, 200);
+        });
+
+        // Form submit loading
+        document.addEventListener('submit', function (e) {
+            var form = e.target;
+            if (form.hasAttribute('download')) return;
+            if (!form.checkValidity || form.checkValidity()) {
+                setTimeout(function () { showGlobalLoading(); }, 200);
+            }
+        });
+
+        // ===== Navbar auto-hide on scroll (DESIGN.md §Navigation) =====
+        (function () {
+            var lastY = 0;
+            var navbar = document.getElementById('mainNavbar');
+            var navH = navbar ? navbar.offsetHeight : 56;
+            window.addEventListener('scroll', function () {
+                var y = window.scrollY;
+                if (y > navH && y > lastY) {
+                    navbar.classList.add('navbar-hidden');
+                } else {
+                    navbar.classList.remove('navbar-hidden');
+                }
+                lastY = y;
+            }, { passive: true });
+        })();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
