@@ -39,12 +39,26 @@ jobs:
             type=ref,event=branch
             type=sha,prefix=
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+
+      - name: Push image
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE='${{ env.IMAGE_NAME }}'
+          TAG='${{ steps.meta.outputs.tags }}'
+
+          docker push "$IMAGE:$TAG"
+
+          if [ '${{ steps.meta.outputs.push_latest }}' = 'true' ]; then
+            docker tag "$IMAGE:$TAG" "$IMAGE:latest"
+            docker push "$IMAGE:latest"
+          fi
